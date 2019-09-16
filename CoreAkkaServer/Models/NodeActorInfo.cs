@@ -39,35 +39,67 @@ namespace CoreAkkaServer.Models
 
 
 
-        private NodeActorInfo(IActorRef _actorPath, double _totalCores, double _inProcessCores = 0, int _currentProcesses = 0)
-        {
-            this.ActorPath = _actorPath;
-            this.TotalCores = _totalCores;
-            this.TotalProcesses = (int)_totalCores * 2; // two processes per one core
 
-            this.InProcessCores = _inProcessCores;
-            this.CurrentProcesses = _currentProcesses;
+        public void IncrementCoreAndProcess(double _coreDelta = 1, int _processDelta = 1)
+        {
+            if (this.InProcessCores + _coreDelta <= this.TotalCores && this.CurrentProcesses + _processDelta <= this.TotalProcesses)
+            {
+                this.InProcessCores += _coreDelta;
+                this.CurrentProcesses += _processDelta;
+                return;
+            }
+
+
+            Console.WriteLine("SHOULD NOT HAPPEN");
         }
 
 
-        public NodeActorInfo IncrementCoreAndProcess(double _coreDelta = 1, int _processDelta = 1)
+        public void DecrementCoreAndProcess(double _coreDelta = 1, int _processDelta = 1)
         {
-            return Copy(_inProcessCores: this.InProcessCores + _coreDelta, _currentProcesses: this.CurrentProcesses + _processDelta);
+            if (this.InProcessCores - _coreDelta >= 0.0 && this.CurrentProcesses - _processDelta >= 0)
+            {
+                this.InProcessCores -= _coreDelta;
+                this.CurrentProcesses -= _processDelta;
+                return;
+            }
+
+            Console.WriteLine("SHOULD NOT HAPPEN");
         }
 
+        #region Old Code
+        //no need
+        //private NodeActorInfo(IActorRef _actorPath, double _totalCores, double _inProcessCores = 0, int _currentProcesses = 0)
+        //{
+        //    this.ActorPath = _actorPath;
+        //    this.TotalCores = _totalCores;
+        //    this.TotalProcesses = (int)_totalCores * 2; // two processes per one core
 
-        public NodeActorInfo DecrementCoreAndProcess(double _coreDelta = 1, int _processDelta = 1)
-        {
-            return Copy(_inProcessCores: this.InProcessCores - _coreDelta, _currentProcesses: this.CurrentProcesses - _processDelta);
-        }
+        //    this.InProcessCores = _inProcessCores;
+        //    this.CurrentProcesses = _currentProcesses;
+        //}
 
 
-        private NodeActorInfo Copy(double? _inProcessCores, int? _currentProcesses)
-        {
-            return new NodeActorInfo(ActorPath, TotalCores, 
-                _inProcessCores : _inProcessCores ?? InProcessCores,
-                _currentProcesses: _currentProcesses.HasValue ? _currentProcesses.Value : CurrentProcesses
-                );
-        }
+        //public NodeActorInfo IncrementCoreAndProcess(double _coreDelta = 1, int _processDelta = 1)
+        //{
+        //    return Copy(_inProcessCores: this.InProcessCores + _coreDelta, _currentProcesses: this.CurrentProcesses + _processDelta);
+        //}
+
+
+        //public NodeActorInfo DecrementCoreAndProcess(double _coreDelta = 1, int _processDelta = 1)
+        //{
+        //    return Copy(_inProcessCores: this.InProcessCores - _coreDelta, _currentProcesses: this.CurrentProcesses - _processDelta);
+        //}
+
+
+
+        ////unused
+        //private NodeActorInfo Copy(double? _inProcessCores, int? _currentProcesses)
+        //{
+        //    return new NodeActorInfo(ActorPath, TotalCores, 
+        //        _inProcessCores : _inProcessCores ?? InProcessCores,
+        //        _currentProcesses: _currentProcesses.HasValue ? _currentProcesses.Value : CurrentProcesses
+        //        );
+        //}
+        #endregion
     }
 }

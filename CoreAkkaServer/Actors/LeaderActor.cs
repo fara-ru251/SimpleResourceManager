@@ -79,7 +79,7 @@ namespace CoreAkkaServer.Actors
             Receive<DispatchTo>(dispatch => 
             {
                 //NOT RUN, have to do checking op.
-                //опасно, то есть неправильно
+                //опасно
                 Context.ActorSelection(dispatch._actorPath.Path).Tell(new ProcessDispatch(dispatch._processInfo));
             });
 
@@ -100,8 +100,6 @@ namespace CoreAkkaServer.Actors
                     }
                 }
             });
-
-
         }
 
 
@@ -116,7 +114,7 @@ namespace CoreAkkaServer.Actors
         {
             if (_nodeInfoList.Count == 0)
             {
-                return true;
+                return false;
             }
 
             foreach (var nodeInfo in _nodeInfoList)
@@ -125,6 +123,7 @@ namespace CoreAkkaServer.Actors
                 //easy way
                 if ((nodeInfo.AvailableCores - (job._processInfo._requiredCores / 2.0)) >= 0.0)
                 {
+                    //WARNING PLACE!!!
                     nodeInfo.DecrementCoreAndProcess(_coreDelta: (job._processInfo._requiredCores / 2.0), _processDelta: job._processInfo._requiredCores);
                     //self tell to dispath to one of available nodes
                     Self.Tell(new DispatchTo(job._processInfo, nodeInfo.ActorPath));

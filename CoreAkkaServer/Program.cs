@@ -77,7 +77,7 @@ namespace CoreAkkaServer
 
 
                 //IMPROVE
-                leaderActor.Tell(new LeaderActor.CanAcceptJob(new ProcessInfo(1 , new Param(Path.GetDirectoryName(str)),str,$"task_{cnt++}")));
+                leaderActor.Tell(new LeaderActor.CanAcceptJob(new ProcessInfo(1, new Param(Path.GetDirectoryName(str)), str, $"task_{cnt++}")));
 
             }
 

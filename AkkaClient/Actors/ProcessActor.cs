@@ -95,6 +95,8 @@ namespace AkkaClient.Actors
         {
             _process.Start();
 
+
+
             //string output = _process.StandardOutput.ReadToEnd();
 
 

@@ -89,7 +89,7 @@ namespace CoreAkkaServer.Actors
             {
                 foreach (var nodeInfo in _nodeInfoList)
                 {
-                    if (nodeInfo.ActorPath == finishedJob.ActorPath)
+                    if (nodeInfo.ActorPath.Path == finishedJob.ActorPath.Path)
                     {
                         Console.WriteLine($"Confirm that process is done by actor: {nodeInfo.ActorPath.Path}");
                         nodeInfo.IncrementCoreAndProcess(_coreDelta: (finishedJob.ReleasedProcesses / 2.0), _processDelta: finishedJob.ReleasedProcesses);

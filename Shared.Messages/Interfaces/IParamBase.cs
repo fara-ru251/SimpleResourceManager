@@ -9,5 +9,6 @@ namespace Shared.Messages.Interfaces
     {
         string Directory { get; set; }
         ProcessPriorityClass Priority { get; set; }
+        string Arguments { get; set; }
     }
 }

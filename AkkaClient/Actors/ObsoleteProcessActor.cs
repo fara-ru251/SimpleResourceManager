@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AkkaClient.Actors
 {
-    public class ProcessActor : ReceiveActor
+    public class ObsoleteProcessActor : ReceiveActor
     {
         #region Messages To Handle
 
@@ -45,7 +45,7 @@ namespace AkkaClient.Actors
         private readonly ICancelable _cancelRepeating;
         private bool _processExited;
 
-        public ProcessActor(ProcessInfo processInfo, Func<Process> processGenerator)
+        public ObsoleteProcessActor(ProcessInfo processInfo, Func<Process> processGenerator)
         {
             _processInfo = processInfo;
             _processGenerator = processGenerator;
@@ -122,7 +122,10 @@ namespace AkkaClient.Actors
                     return;
                 }
 
-                Context.Parent.Tell(new ProcessCoordinatorActor.ProcessComplete(_processInfo._requiredCores));
+                var process_result = new Models.ProcessResult();
+                process_result.SetProcessResult(true, _process.ExitCode);
+
+                Context.Parent.Tell(new ProcessCoordinatorActor.ProcessComplete(_processInfo._requiredCores, process_result));
                 _processExited = true;
                 _cancelRepeating.Cancel();
                 Self.Tell(PoisonPill.Instance);

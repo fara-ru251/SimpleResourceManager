@@ -1,4 +1,5 @@
 ﻿using Akka.Actor;
+using AkkaClient.Models;
 using Shared.Messages.Models;
 using System;
 using System.Collections.Generic;
@@ -28,11 +29,13 @@ namespace AkkaClient.Actors
         /// </summary>
         public class ProcessComplete
         {
-            public ProcessComplete(int releasedProcesses)
+            public ProcessComplete(int releasedProcesses, ProcessResult processResult)
             {
                 ReleasedProcesses = releasedProcesses;
+                ProcessResult = processResult;
             }
-            public int ReleasedProcesses;
+            public int ReleasedProcesses { get; private set; }
+            public ProcessResult ProcessResult { get; private set; }
         }
         
         #endregion
@@ -49,11 +52,12 @@ namespace AkkaClient.Actors
             Receive<ProcessRun>(process =>
             {
                 //Props processorActorProps = Props.Create<ProcessActor>(process._processInfo);
-                Props processorActorProps = Props.Create(() => new ProcessActor(process._processInfo, () => new Process()));
+
+                Props processorActorProps = Props.Create(() => new AsyncProcessActor(process._processInfo, () => new Process()));
                 var processActor = Context.ActorOf(processorActorProps);
 
                 _processActors.Add(processActor);
-                processActor.Tell(new ProcessActor.Start());
+                processActor.Tell(new AsyncProcessActor.Start());
             });
 
             //приходит с дочернего актора

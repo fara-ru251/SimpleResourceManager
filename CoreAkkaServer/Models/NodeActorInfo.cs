@@ -26,6 +26,12 @@ namespace CoreAkkaServer.Models
             get { return TotalCores - InProcessCores; }
         }
 
+        public int AvailableProcesses
+        {
+            get { return TotalProcesses - CurrentProcesses; }
+        }
+
+
         //initial
         public  NodeActorInfo(IActorRef _actorPath, double _totalCores)
         {
@@ -42,10 +48,10 @@ namespace CoreAkkaServer.Models
 
         public void IncrementCoreAndProcess(double _coreDelta = 1, int _processDelta = 1)
         {
-            if (this.InProcessCores + _coreDelta <= this.TotalCores && this.CurrentProcesses + _processDelta <= this.TotalProcesses)
+            if (this.AvailableCores + _coreDelta <= this.TotalCores && this.AvailableProcesses + _processDelta <= this.TotalProcesses)
             {
-                this.InProcessCores += _coreDelta;
-                this.CurrentProcesses += _processDelta;
+                this.InProcessCores -= _coreDelta;
+                this.CurrentProcesses -= _processDelta;
                 return;
             }
 
@@ -56,10 +62,10 @@ namespace CoreAkkaServer.Models
 
         public void DecrementCoreAndProcess(double _coreDelta = 1, int _processDelta = 1)
         {
-            if (this.InProcessCores - _coreDelta >= 0.0 && this.CurrentProcesses - _processDelta >= 0)
+            if (this.AvailableCores - _coreDelta >= 0.0 && this.AvailableProcesses - _processDelta >= 0)
             {
-                this.InProcessCores -= _coreDelta;
-                this.CurrentProcesses -= _processDelta;
+                this.InProcessCores += _coreDelta;
+                this.CurrentProcesses += _processDelta;
                 return;
             }
 

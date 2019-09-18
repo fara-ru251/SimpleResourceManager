@@ -10,12 +10,13 @@ namespace Shared.Messages.Models
     {
         public string Directory { get; set; }
         public ProcessPriorityClass Priority { get; set; }
+        public string Arguments { get; set; }
 
-
-        public Param(string directory, ProcessPriorityClass processPriority = ProcessPriorityClass.Normal)
+        public Param(string directory,string arguments = null, ProcessPriorityClass processPriority = ProcessPriorityClass.Normal)
         {
             this.Directory = Directory;
-            Priority = processPriority;
+            this.Priority = processPriority;
+            this.Arguments = arguments;
         }
     }
 }

@@ -46,7 +46,7 @@ namespace AkkaClient
             //example
             //string path = @"D:\app_for_sabina\OBK\OBKApplications\00da66d1-f9a1-4366-af95-f49b090ffac7.txt"; //@"C:\MinGW\Новая\a.exe";
 
-            //nodeActor.Tell(new NodeActor.ProcessDispatch(new ProcessInfo(2, new Param(Path.GetDirectoryName(path)), path, "test_task")));
+            //nodeActor.Tell(new NodeActor.ProcessDispatch(new ProcessInfo(2, new Param(Path.GetDirectoryName(path)), path, "test_task", 10)));
 
             //wait until terminate is affected
             ClientActorSystem.WhenTerminated.Wait();

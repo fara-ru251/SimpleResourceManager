@@ -12,10 +12,7 @@ namespace AkkaClient.Actors
     {
         #region Messages
 
-        /// <summary>
-        /// To register self in "ParentNode"
-        /// </summary>
-        
+
         //IN SHARED
         //public class ProcessDispatch
         //{
@@ -48,7 +45,7 @@ namespace AkkaClient.Actors
 
 
         private readonly IActorRef _processCoordinatorActor;
-        private readonly ActorSelection _server = Context.ActorSelection("akka.tcp://ClientActorSystem@localhost:8090/user/leader"); //leaderActor
+        private readonly ActorSelection _server = Context.ActorSelection("akka.tcp://ServerActorSystem@localhost:8090/user/leader"); //leaderActor
 
 
         public NodeActor(IActorRef processCoordinatorActor)
@@ -56,12 +53,10 @@ namespace AkkaClient.Actors
             _processCoordinatorActor = processCoordinatorActor;
 
 
-            //var sel = Context.System.ActorSelection("");
-            //sel.Tell(new RegisterNodeMessage() { NodeActor = Self, Cores = Environment.ProcessorCount - 1 });
 
             Receive<ProcessDispatch>(dispatch =>
             {
-                _processCoordinatorActor.Tell(new ProcessCoordinatorActor.ProcessRun(dispatch._processInfo));
+                _processCoordinatorActor.Tell(new ProcessCoordinatorActor.ProcessRun(dispatch._processInfo.Key, dispatch._processInfo.Value));
             });
 
 
@@ -70,13 +65,14 @@ namespace AkkaClient.Actors
             //    Context.System.Terminate();
             //});
 
-            Receive<ProcessCoordinatorActor.ProcessComplete>(processComplete =>
+            Receive<ProcessCoordinatorActor.SendToNode>(node =>
             {
                 //WARNING
                 //Context.ActorSelection("leaderPath").Tell(new NodeFinishedJob(processComplete.ReleasedProcesses, Self.Path.ToString()));
                 Console.WriteLine("Saying to leader that process complete...");
 
-                _server.Tell(new NodeFinishedJob(processComplete.ReleasedProcesses, Self));
+                var processingResult = new ProcessingResult(node._processComplete.ProcessResult.ExitCode, node._processComplete.ProcessResult.Output);
+                _server.Tell(new NodeFinishedJob(node._processComplete.ReleasedProcesses, Self, node._key, processingResult));
             });
 
 
@@ -86,6 +82,11 @@ namespace AkkaClient.Actors
 
 
                 _server.Tell(new RegisterNodeMessage(Self, Environment.ProcessorCount / 2), Self);
+            });
+
+            Receive<string>(str => str == "exit", shutdown => 
+            {
+                Context.System.Terminate();
             });
         }
     }

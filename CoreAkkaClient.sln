@@ -5,9 +5,11 @@ VisualStudioVersion = 15.0.27428.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AkkaClient", "AkkaClient\AkkaClient.csproj", "{95C40AEA-08FA-45F3-957A-5642C3B1A19A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Messages", "Shared.Messages\Shared.Messages.csproj", "{57CCD80D-9458-49D3-9132-0496E9BCD511}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared.Messages", "Shared.Messages\Shared.Messages.csproj", "{57CCD80D-9458-49D3-9132-0496E9BCD511}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AkkaServer", "CoreAkkaServer\AkkaServer.csproj", "{1E215324-FFD4-42AE-AB96-A1EB4259ED35}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManagerAPI.UI", "ManagerAPI.UI\ManagerAPI.UI.csproj", "{11BB1C23-FD14-4475-AACA-0AA7D3952737}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{1E215324-FFD4-42AE-AB96-A1EB4259ED35}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E215324-FFD4-42AE-AB96-A1EB4259ED35}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1E215324-FFD4-42AE-AB96-A1EB4259ED35}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11BB1C23-FD14-4475-AACA-0AA7D3952737}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11BB1C23-FD14-4475-AACA-0AA7D3952737}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11BB1C23-FD14-4475-AACA-0AA7D3952737}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11BB1C23-FD14-4475-AACA-0AA7D3952737}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

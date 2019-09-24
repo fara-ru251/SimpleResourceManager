@@ -8,7 +8,7 @@ namespace Shared.Messages.Models
 {
     public class ProcessInfo : IProcessBase
     {
-        public ProcessInfo(int requiredCores, IParamBase param, string exePath, string taskName, int timeout = 10)
+        public ProcessInfo(int requiredCores,  string exePath, string taskName, int timeout = 10, IParamBase param = null)
         {
             _requiredCores = requiredCores;
             _params = param;

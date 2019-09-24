@@ -80,7 +80,7 @@ namespace CoreAkkaServer.Actors
             {
                 //NOT RUN, have to do checking op.
                 //опасно
-                Context.ActorSelection(dispatch._actorPath.Path).Tell(new ProcessDispatch(dispatch._processInfo));
+                //Context.ActorSelection(dispatch._actorPath.Path).Tell(new ProcessDispatch(dispatch._processInfo));
             });
 
 
@@ -121,15 +121,15 @@ namespace CoreAkkaServer.Actors
             {
                 //gets the first node that fits our requirements
                 //easy way
-                if ((nodeInfo.AvailableCores - (job._processInfo._requiredCores / 2.0)) >= 0.0)
-                {
-                    //WARNING PLACE!!!
-                    nodeInfo.DecrementCoreAndProcess(_coreDelta: (job._processInfo._requiredCores / 2.0), _processDelta: job._processInfo._requiredCores);
-                    //self tell to dispath to one of available nodes
-                    Self.Tell(new DispatchTo(job._processInfo, nodeInfo.ActorPath));
+                //if ((nodeInfo.AvailableCores - (job._processInfo._requiredCores / 2.0)) >= 0.0)
+                //{
+                //    //WARNING PLACE!!!
+                //    nodeInfo.DecrementCoreAndProcess(_coreDelta: (job._processInfo._requiredCores / 2.0), _processDelta: job._processInfo._requiredCores);
+                //    //self tell to dispath to one of available nodes
+                //    //Self.Tell(new DispatchTo(job._processInfo, nodeInfo.ActorPath));
 
-                    return false;
-                }
+                //    return false;
+                //}
             }
 
 

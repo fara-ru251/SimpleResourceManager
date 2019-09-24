@@ -195,6 +195,7 @@ namespace AkkaClient.Actors
         //method used by "ExecuteShellCommand"
         private Task<bool> WaitForExitAsync(Process process, int timeout)
         {
+            //MAX timeout 596 hours => 596 * 60 minutes
             return Task.Run(() => process.WaitForExit(timeout));
         }
 

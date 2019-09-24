@@ -7,11 +7,11 @@ namespace Shared.Messages.Messages
 {
     public class ProcessDispatch
     {
-        public ProcessDispatch(ProcessInfo processInfo)
+        public ProcessDispatch(KeyValuePair<Guid, ProcessInfo> kvp)
         {
-            _processInfo = processInfo;
+            _processInfo = kvp;
         }
 
-        public ProcessInfo _processInfo;
+        public KeyValuePair<Guid, ProcessInfo> _processInfo { get; private set; }
     }
 }

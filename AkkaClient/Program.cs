@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using Akka.Routing;
 using Akka.Configuration;
+using System.Threading;
 
 namespace AkkaClient
 {
@@ -40,6 +41,7 @@ namespace AkkaClient
 
             var nodeActor = ClientActorSystem.ActorOf(Props.Create(() => new NodeActor(processCoordinatorActor)), "nodeActor");
 
+
             nodeActor.Tell("registerYourself");
 
 
@@ -47,6 +49,18 @@ namespace AkkaClient
             //string path = @"D:\app_for_sabina\OBK\OBKApplications\00da66d1-f9a1-4366-af95-f49b090ffac7.txt"; //@"C:\MinGW\Новая\a.exe";
 
             //nodeActor.Tell(new NodeActor.ProcessDispatch(new ProcessInfo(2, new Param(Path.GetDirectoryName(path)), path, "test_task", 10)));
+
+            //while (true)
+            //{
+            //    string str = Console.ReadLine();
+
+            //    if (str.ToLowerInvariant().Equals("exit", StringComparison.InvariantCulture))
+            //    {
+            //        nodeActor.Tell(str.ToLowerInvariant());
+            //        break;
+            //    }
+            //}
+
 
             //wait until terminate is affected
             ClientActorSystem.WhenTerminated.Wait();

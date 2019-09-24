@@ -50,16 +50,20 @@ namespace AkkaClient
 
             //nodeActor.Tell(new NodeActor.ProcessDispatch(new ProcessInfo(2, new Param(Path.GetDirectoryName(path)), path, "test_task", 10)));
 
-            //while (true)
-            //{
-            //    string str = Console.ReadLine();
+            while (true)
+            {
+                string str = Console.ReadLine();
 
-            //    if (str.ToLowerInvariant().Equals("exit", StringComparison.InvariantCulture))
-            //    {
-            //        nodeActor.Tell(str.ToLowerInvariant());
-            //        break;
-            //    }
-            //}
+                if (str.ToLowerInvariant().Equals("exit", StringComparison.InvariantCulture))
+                {
+                    nodeActor.Tell(str.ToLowerInvariant());
+                    break;
+                }
+                //else
+                //{
+                //    nodeActor.Tell(str);
+                //}
+            }
 
 
             //wait until terminate is affected

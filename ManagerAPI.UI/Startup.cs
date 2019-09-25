@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Akka.Actor;
+using ManagerAPI.UI.Models;
 using ManagerAPI.UI.Models.ActorProviders;
 using ManagerAPI.UI.Models.ActorSystemConfig;
 using ManagerAPI.UI.Models.Domain;
@@ -31,22 +32,28 @@ namespace ManagerAPI.UI
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddSingleton(_ => ActorSystem.Create("ServerActorSystem", ConfigurationLoader.Load()));
 
-            //leader actor
-            services.AddSingleton<LeaderActorProvider>(provider =>
-            {
-                var actorSystem = provider.GetService<ActorSystem>();
+            #region Delegate Used Code
+            //services.AddSingleton(_ => ActorSystem.Create("ServerActorSystem", ConfigurationLoader.Load()));
 
-                var leaderActor = actorSystem.ActorOf(Props.Create(() => new LeaderActor()), "leader");
+            ////leader actor
+            ////rejecting delegate solution
+            //services.AddSingleton<LeaderActorProvider>(provider =>
+            //{
+            //    var actorSystem = provider.GetService<ActorSystem>();
 
-                return () => leaderActor;
-            });
+            //    var leaderActor = actorSystem.ActorOf(Props.Create(() => new LeaderActor()), "leader");
+
+            //    return () => leaderActor;
+            //});
+            #endregion
+
+            services.AddSingleton(_ => AkkaStartupTasks.StartAkka());
 
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", info: new Swashbuckle.AspNetCore.Swagger.Info() {Title = "AkkaAPI", Version = "v1" });
+                c.SwaggerDoc("v1", info: new Swashbuckle.AspNetCore.Swagger.Info() { Title = "AkkaAPI", Version = "v1" });
             });
         }
 
@@ -63,15 +70,20 @@ namespace ManagerAPI.UI
                 app.UseHsts();
             }
 
-            lifetime.ApplicationStarted.Register( () => 
+
+            #region ApplicationLifetime Used Code
+            lifetime.ApplicationStarted.Register(() =>
             {
                 app.ApplicationServices.GetService<ActorSystem>();
             });
 
-            lifetime.ApplicationStopping.Register(() => 
+            lifetime.ApplicationStopping.Register(() =>
             {
                 app.ApplicationServices.GetService<ActorSystem>().Terminate().Wait();
             });
+            #endregion
+
+
 
             app.UseSwagger();
 
@@ -82,7 +94,7 @@ namespace ManagerAPI.UI
 
 
             app.UseHttpsRedirection();
-            app.UseMvc();
+            app.UseMvcWithDefaultRoute();
         }
     }
 }

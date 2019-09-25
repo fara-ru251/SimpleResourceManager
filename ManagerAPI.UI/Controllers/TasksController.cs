@@ -17,12 +17,15 @@ namespace ManagerAPI.UI.Controllers
     [ApiController]
     public class TasksController : ControllerBase
     {
-        private readonly IActorRef _leaderActor;
+        //private readonly IActorRef _leaderActor;
 
-        public TasksController(LeaderActorProvider leaderActorProvider)
-        {
-            _leaderActor = leaderActorProvider();
-        }
+
+        //public TasksController(LeaderActorProvider leaderActorProvider)
+        //{
+        //    _leaderActor = leaderActorProvider();
+        //}
+
+        private readonly IActorRef _leaderActor = SystemActors.LeaderActor;
 
         //public async Task<IActionResult> Post([FromBody] ProcessInfo info)
         [HttpPost]
@@ -30,7 +33,7 @@ namespace ManagerAPI.UI.Controllers
         {
             //Debug.WriteLine(string.Format("{0} {1} {2}",info.TaskName,info._requiredCores, info.Timeout));
 
-            var result = await _leaderActor.Ask<Guid>(new LeaderActor.StashForPending(new ProcessInfo(cores,path,name,param: new Param(Path.GetDirectoryName(path)))));
+            var result = await _leaderActor.Ask<Guid>(new LeaderActor.StashForPending(new ProcessInfo(cores, path, name, param: new Param(Path.GetDirectoryName(path)))));
             return Ok(result);
         }
 

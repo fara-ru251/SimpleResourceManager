@@ -56,7 +56,7 @@ namespace AkkaClient
 
                 if (str.ToLowerInvariant().Equals("exit", StringComparison.InvariantCulture))
                 {
-                    nodeActor.Tell(str.ToLowerInvariant());
+                    nodeActor.Tell(new NodeActor.ShutDown());
                     break;
                 }
                 //else

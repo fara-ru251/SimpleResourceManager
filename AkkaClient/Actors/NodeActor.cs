@@ -69,7 +69,7 @@ namespace AkkaClient.Actors
             {
                 //WARNING
                 //Context.ActorSelection("leaderPath").Tell(new NodeFinishedJob(processComplete.ReleasedProcesses, Self.Path.ToString()));
-                Console.WriteLine("Saying to leader that process complete...");
+                Console.WriteLine($"Saying to leader that process {node._key} complete...");
 
                 var processingResult = new ProcessingResult(node._processComplete.ProcessResult.ExitCode, node._processComplete.ProcessResult.Output);
                 _server.Tell(new NodeFinishedJob(node._processComplete.ReleasedProcesses, Self, node._key, processingResult));
@@ -84,7 +84,8 @@ namespace AkkaClient.Actors
                 _server.Tell(new RegisterNodeMessage(Self, Environment.ProcessorCount / 2), Self);
             });
 
-            Receive<string>(str => str == "exit", shutdown => 
+            //TODO improve graceful shutdown
+            Receive<ShutDown>(shutdown => 
             {
                 Context.System.Terminate();
             });

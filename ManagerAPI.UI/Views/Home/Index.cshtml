@@ -1,0 +1,53 @@
+﻿@model IEnumerable<ManagerAPI.UI.Models.MVCModels.AllJobs>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Index";
+}
+
+<h1>Akka.NET</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayName("Identifier")
+            </th>
+            <th>
+                @Html.DisplayName("Status")
+            </th>
+            <th>
+                @Html.DisplayName("Error || Output")
+            </th>
+            <th>
+                @Html.DisplayName("Exit Code")
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        var result = item.Result != null ? item.Result.Output : string.Empty;
+        var exitCode = item.Result != null ? item.Result.ExitCode : null;
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Identifier)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => result)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => exitCode)
+            </td>
+        </tr>
+    }
+    </tbody>
+
+</table>
+
+
+
+
+

@@ -1,5 +1,6 @@
 ﻿using Akka.Actor;
 using ManagerAPI.UI.Models.DomainMessages;
+using ManagerAPI.UI.Models.MVCModels;
 using Shared.Messages.Messages;
 using Shared.Messages.Models;
 using System;
@@ -52,6 +53,9 @@ namespace ManagerAPI.UI.Models.Domain
 
             public static CheckForPending Instance { get; } = new CheckForPending();
         }
+
+        public class GetAllJobs { }
+
         #endregion
 
         public Dictionary<Guid, ProcessInfo> _pendingJobs { get; private set; }
@@ -75,12 +79,36 @@ namespace ManagerAPI.UI.Models.Domain
 
         private void Ready()
         {
+            Receive<GetAllJobs>(jobs => 
+            {
+                var result = new List<AllJobs>();
+
+                foreach (var kvp in _pendingJobs)
+                {
+                    result.Add(new AllJobs(kvp.Key,"Pending"));
+                }
+
+                foreach (var kvp in _runningJobs)
+                {
+                    result.Add(new AllJobs(kvp.Key, "Running"));
+                }
+
+                foreach (var kvp in _finishedJobs)
+                {
+                    result.Add(new AllJobs(kvp.Key, "Finished", result: kvp.Value));
+                }
+
+                Sender.Tell(result);
+            });
+
+
 
             //when node is up, & is likely getting to join
             Receive<RegisterNodeMessage>(register =>
             {
 
-                Debug.WriteLine("Connection established");
+                Debug.WriteLine($"Connection established with {register.NodeActor.Path}");
+                //TODO Remove from "_nodeInfoList"
                 _nodeInfoList.Add(new NodeActorInfo(Sender, register.Cores));
             });
 

@@ -12,9 +12,6 @@ namespace AkkaClient.Actors
     {
         #region Messages
 
-        /// <summary>
-        /// To run process
-        /// </summary>
         public class ProcessRun
         {
             public ProcessRun(Guid key, ProcessInfo processInfo)
@@ -27,9 +24,6 @@ namespace AkkaClient.Actors
             public ProcessInfo _processInfo { get; private set; }
         }
 
-        /// <summary>
-        /// Indicates that process completed
-        /// </summary>
         public class ProcessComplete
         {
             public ProcessComplete(int releasedProcesses, ProcessResult processResult)

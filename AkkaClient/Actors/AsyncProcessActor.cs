@@ -4,6 +4,7 @@ using Shared.Messages.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -72,7 +73,8 @@ namespace AkkaClient.Actors
                 Arguments = _processInfo._params.Arguments, // dafault value = NULL
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
-                RedirectStandardError = true
+                RedirectStandardError = true,
+                WorkingDirectory = new FileInfo(_processInfo._exePath).Directory.FullName
             };
 
             base.PreStart();
@@ -134,7 +136,7 @@ namespace AkkaClient.Actors
                 };
 
                 bool isStarted;
-
+                
                 try
                 {
                     isStarted = _process.Start();
@@ -143,6 +145,13 @@ namespace AkkaClient.Actors
                 {
                     result.SetProcessResult(completed: true, exitCode: -1, output: error.Message);
                     isStarted = false;
+                    Console.WriteLine("---------------Started----------------");
+                    Console.WriteLine(error.Message);
+                    Console.WriteLine("======================================");
+                    Console.WriteLine(error.InnerException != null ? error.InnerException.Message : string.Empty);
+                    Console.WriteLine("======================================");
+                    Console.WriteLine(error.StackTrace);
+                    Console.WriteLine("---------------Finished---------------");
                 }
 
 
@@ -164,7 +173,7 @@ namespace AkkaClient.Actors
 
                     if (await Task.WhenAny(Task.Delay(time_out), processTask) == processTask && waitForExit.Result)
                     {
-                        result.SetProcessResult(completed: true, exitCode: _process.ExitCode);
+                        result.SetProcessResult(completed: true, exitCode: _process.ExitCode, output: outputBuilder.ToString());
 
 
                         //if process exit code other than zero => means error

@@ -127,6 +127,13 @@ namespace ManagerAPI.UI.Models.Domain
             Receive<DispatchTo>(dispatch =>
             {
                 //NOT RUN, have to do checking op.
+
+                if (dispatch._actorPath == ActorRefs.Nobody)
+                {
+                    Console.WriteLine("Nobody to sent");
+                    return;
+                }
+                
                 Context.ActorSelection(dispatch._actorPath.Path).Tell(new ProcessDispatch(dispatch._keyValuePair));
             });
 

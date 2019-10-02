@@ -45,8 +45,8 @@ namespace AkkaClient.Actors
 
 
         private readonly IActorRef _processCoordinatorActor;
-        private readonly ActorSelection _server = Context.ActorSelection("akka.tcp://ServerActorSystem@localhost:8090/user/leader"); //leaderActor
-
+        //private readonly ActorSelection _server = Context.ActorSelection("akka.tcp://ServerActorSystem@localhost:8090/user/leader"); //leaderActor
+        private readonly ActorSelection _server = Context.ActorSelection("akka.tcp://ServerActorSystem@192.168.154.23:8090/user/leader"); //leaderActor
 
         public NodeActor(IActorRef processCoordinatorActor)
         {

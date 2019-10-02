@@ -29,11 +29,11 @@ namespace ManagerAPI.UI.Controllers
 
         //public async Task<IActionResult> Post([FromBody] ProcessInfo info)
         [HttpPost]
-        public async Task<IActionResult> Post(int cores, string path, string name, int timeout)
+        public async Task<IActionResult> Post(int cores, string path, string name, int timeout, string arguments = null)
         {
             //Debug.WriteLine(string.Format("{0} {1} {2}",info.TaskName,info._requiredCores, info.Timeout));
 
-            var result = await _leaderActor.Ask<Guid>(new LeaderActor.StashForPending(new ProcessInfo(cores, path, name, param: new Param(Path.GetDirectoryName(path)))));
+            var result = await _leaderActor.Ask<Guid>(new LeaderActor.StashForPending(new ProcessInfo(cores, path, name, param: new Param(arguments: arguments, directory: Path.GetDirectoryName(path)))));
             return Ok(result);
         }
 

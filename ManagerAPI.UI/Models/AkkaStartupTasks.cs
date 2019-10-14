@@ -12,6 +12,7 @@ namespace ManagerAPI.UI.Models
     {
         public static ActorSystem StartAkka()
         {
+
             SystemActors.WebActorSystem = ActorSystem.Create("ServerActorSystem", ConfigurationLoader.Load());
 
             SystemActors.LeaderActor = SystemActors.WebActorSystem.ActorOf(Props.Create(() => new LeaderActor()), "leader");

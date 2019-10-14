@@ -37,7 +37,7 @@ namespace AkkaClient.Actors
 
         private void Waiting()
         {
-            Receive<Start>(start => 
+            Receive<Start>(start =>
             {
                 Become(Working);
                 ExecuteShellCommandAsync().PipeTo(Self);
@@ -76,6 +76,8 @@ namespace AkkaClient.Actors
                 RedirectStandardError = true,
                 WorkingDirectory = new FileInfo(_processInfo._exePath).Directory.FullName
             };
+
+            Console.WriteLine("WorkingDirectory " + _process.StartInfo.WorkingDirectory);
 
             base.PreStart();
         }
@@ -136,14 +138,18 @@ namespace AkkaClient.Actors
                 };
 
                 bool isStarted;
-                
+                DateTime startTime = DateTime.Now;
+                //var startTime = DateTimeOffset.Now;
                 try
                 {
                     isStarted = _process.Start();
+                    startTime = _process.StartTime;
                 }
                 catch (Exception error)
                 {
-                    result.SetProcessResult(completed: true, exitCode: -1, output: error.Message);
+                    //WARNING, MAY FAIL
+                    //var exitTime = DateTimeOffset.Now;
+                    result.SetProcessResult(TimeSpan.Zero, completed: true, exitCode: -1, output: error.Message);
                     isStarted = false;
                     Console.WriteLine("---------------Started----------------");
                     Console.WriteLine(error.Message);
@@ -158,6 +164,7 @@ namespace AkkaClient.Actors
 
                 if (isStarted)
                 {
+
                     _process.BeginOutputReadLine();
                     _process.BeginErrorReadLine();
 
@@ -173,20 +180,23 @@ namespace AkkaClient.Actors
 
                     if (await Task.WhenAny(Task.Delay(time_out), processTask) == processTask && waitForExit.Result)
                     {
-                        result.SetProcessResult(completed: true, exitCode: _process.ExitCode, output: outputBuilder.ToString());
+                        //var exitTime = DateTimeOffset.Now;
+                        DateTime exitTime = _process.ExitTime;
 
+                        result.SetProcessResult(exitTime - startTime, completed: true, exitCode: _process.ExitCode, output: outputBuilder.ToString());
 
                         //if process exit code other than zero => means error
                         if (_process.ExitCode != 0)
                         {
-                            result.SetProcessResult(output: $"{outputBuilder}{errorBuilder}");
+                            result.SetProcessResult(exitTime - startTime, exitCode: _process.ExitCode, output: $"{outputBuilder}{errorBuilder}");
                         }
                     }
                     else
                     {
                         try
                         {
-                            result.SetProcessResult(completed: false, output: "Process hung, so was killed by timeout");
+                            TimeSpan elapsed = _process.StartTime.Add(TimeSpan.FromMinutes(_processInfo.Timeout)) - startTime;
+                            result.SetProcessResult(elapsed, completed: false, output: "Process hung, so was killed by timeout");
 
                             _process.Kill();
                         }

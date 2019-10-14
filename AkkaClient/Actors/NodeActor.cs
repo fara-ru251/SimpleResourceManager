@@ -71,7 +71,7 @@ namespace AkkaClient.Actors
                 //Context.ActorSelection("leaderPath").Tell(new NodeFinishedJob(processComplete.ReleasedProcesses, Self.Path.ToString()));
                 Console.WriteLine($"Saying to leader that process {node._key} complete...");
 
-                var processingResult = new ProcessingResult(node._processComplete.ProcessResult.ExitCode, node._processComplete.ProcessResult.Output);
+                var processingResult = new ProcessingResult(node._processComplete.ProcessResult.TimeSpan, node._processComplete.ProcessResult.ExitCode, node._processComplete.ProcessResult.Output);
                 _server.Tell(new NodeFinishedJob(node._processComplete.ReleasedProcesses, Self, node._key, processingResult));
             });
 

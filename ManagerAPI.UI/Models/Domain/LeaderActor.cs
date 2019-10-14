@@ -110,6 +110,8 @@ namespace ManagerAPI.UI.Models.Domain
                 Debug.WriteLine($"Connection established with {register.NodeActor.Path}");
                 //TODO Remove from "_nodeInfoList"
                 _nodeInfoList.Add(new NodeActorInfo(Sender, register.Cores));
+
+                Context.Watch(Sender);
             });
 
             //via "CheckForPending" method
@@ -126,15 +128,18 @@ namespace ManagerAPI.UI.Models.Domain
             //when REALLY BEGIN TO RUN
             Receive<DispatchTo>(dispatch =>
             {
-                //NOT RUN, have to do checking op.
+            //NOT RUN, have to do checking op.
 
-                if (dispatch._actorPath == ActorRefs.Nobody)
-                {
-                    Console.WriteLine("Nobody to sent");
-                    return;
-                }
-                
-                Context.ActorSelection(dispatch._actorPath.Path).Tell(new ProcessDispatch(dispatch._keyValuePair));
+            //if (dispatch._actorPath == ActorRefs.Nobody)
+            //{
+            //    Console.WriteLine("Nobody to sent");
+            //    return;
+            //}
+
+
+
+            dispatch._actorPath.Tell(new ProcessDispatch(dispatch._keyValuePair));
+                //Context.ActorSelection(dispatch._actorPath.Path).Tell(new ProcessDispatch(dispatch._keyValuePair));
             });
 
 
@@ -185,6 +190,13 @@ namespace ManagerAPI.UI.Models.Domain
 
             });
 
+
+            Receive<Terminated>(term =>
+            {
+                Debug.WriteLine(term.ToString());
+
+                _nodeInfoList.RemoveWhere(t => t.ActorPath.Path == term.ActorRef.Path);
+            });
         }
 
 
@@ -230,7 +242,7 @@ namespace ManagerAPI.UI.Models.Domain
 
         protected override void PreStart()
         {
-            Context.System.Scheduler.ScheduleTellRepeatedly(TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2),
+            Context.System.Scheduler.ScheduleTellRepeatedly(TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(5),
                         Self, CheckForPending.Instance, Self, _cancelPending);
 
             base.PreStart();

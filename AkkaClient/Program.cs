@@ -27,7 +27,7 @@ namespace AkkaClient
                 remote {
                     dot-netty.tcp {
 		                port = 0
-		                hostname = 192.168.154.24 #localhost
+		                hostname =  192.168.154.24 #""localhost""
                     }
                 }
             }

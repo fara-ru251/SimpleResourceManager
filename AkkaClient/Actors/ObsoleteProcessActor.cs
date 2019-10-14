@@ -123,7 +123,7 @@ namespace AkkaClient.Actors
                 }
 
                 var process_result = new Models.ProcessResult();
-                process_result.SetProcessResult(true, _process.ExitCode);
+                process_result.SetProcessResult(_process.ExitTime - _process.StartTime, true, _process.ExitCode);
 
                 Context.Parent.Tell(new ProcessCoordinatorActor.ProcessComplete(_processInfo._requiredCores, process_result));
                 _processExited = true;

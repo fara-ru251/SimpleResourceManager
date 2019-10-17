@@ -74,7 +74,7 @@ namespace AkkaClient.Actors
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
-                WorkingDirectory = new FileInfo(_processInfo._exePath).Directory.FullName
+                WorkingDirectory = Path.GetDirectoryName(_processInfo._exePath) //new FileInfo(_processInfo._exePath).Directory.FullName
             };
 
             Console.WriteLine("WorkingDirectory " + _process.StartInfo.WorkingDirectory);
